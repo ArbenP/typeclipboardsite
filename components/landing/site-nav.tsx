@@ -7,14 +7,6 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-const NAV_LINKS = [
-  { href: "#features", label: "Features" },
-  { href: "#use-cases", label: "Use Cases" },
-  { href: "#how-it-works", label: "Workflow" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#download", label: "Download" },
-] as const;
-
 function SiteNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -101,26 +93,5 @@ function NavLinks({
   variant?: "desktop" | "mobile";
   onNavigate?: () => void;
 }) {
-  const linkClasses = cn(
-    "font-medium transition-colors hover:text-primary",
-    variant === "mobile"
-      ? "text-base text-foreground/90"
-      : "text-sm text-foreground/80"
-  );
-
-  return (
-    <>
-      {NAV_LINKS.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          onClick={onNavigate}
-          prefetch={false}
-          className={linkClasses}
-        >
-          {item.label}
-        </Link>
-      ))}
-    </>
-  );
+  return null;
 }
