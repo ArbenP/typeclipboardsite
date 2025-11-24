@@ -93,5 +93,31 @@ function NavLinks({
   variant?: "desktop" | "mobile";
   onNavigate?: () => void;
 }) {
-  return null;
+  const items = [
+    { href: "#features", label: "Features" },
+    { href: "#how-it-works", label: "How it Works" },
+  ];
+
+  const baseLinkClasses =
+    "text-sm font-medium text-muted-foreground transition-colors hover:text-foreground";
+
+  return (
+    <>
+      {items.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          prefetch={false}
+          onClick={() => onNavigate?.()}
+          className={cn(
+            baseLinkClasses,
+            variant === "mobile" &&
+              "w-full rounded-md bg-muted/40 px-3 py-2 text-left text-base font-semibold hover:bg-muted"
+          )}
+        >
+          {item.label}
+        </Link>
+      ))}
+    </>
+  );
 }
