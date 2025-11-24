@@ -1,15 +1,26 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Keyboard, MenuIcon, Github } from "lucide-react";
+import { Github, Keyboard, MenuIcon } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+const NAV_LINKS = [
+  { href: "#features", label: "Features" },
+  { href: "#use-cases", label: "Use Cases" },
+  { href: "#how-it-works", label: "Workflow" },
+  { href: "#faq", label: "FAQ" },
+  { href: "#download", label: "Download" },
+] as const;
 
 function SiteNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -40,7 +51,13 @@ function SiteNav() {
                 </Button>
               </Link>
             </div>
-            <button className="md:hidden" onClick={toggleMenu}>
+            <button
+              className="md:hidden rounded-md p-2 hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              onClick={toggleMenu}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
+              aria-label="Toggle navigation"
+            >
               <MenuIcon className="h-6 w-6" />
             </button>
           </div>
@@ -52,19 +69,20 @@ function SiteNav() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
+            id="mobile-navigation"
             className="md:hidden fixed inset-x-0 top-16 z-50 bg-background border-b p-4 shadow-lg"
           >
-            <div className="flex flex-col gap-4">
-              <NavLinks />
+            <div className="flex flex-col gap-4 pb-2">
+              <NavLinks variant="mobile" onNavigate={closeMenu} />
               <div className="flex flex-col gap-2 mt-4">
-                 <Link href="https://github.com/ArbenP/TypeClipboard" target="_blank" className="w-full">
-                    <Button variant="outline" className="w-full justify-start gap-2">
-                        <Github className="h-4 w-4" /> GitHub
-                    </Button>
-                 </Link>
-                 <Link href="https://github.com/ArbenP/TypeClipboard/releases" target="_blank" className="w-full">
-                    <Button className="w-full">Download</Button>
-                 </Link>
+                <Link href="https://github.com/ArbenP/TypeClipboard" target="_blank" className="w-full" prefetch={false}>
+                  <Button variant="outline" className="w-full justify-start gap-2">
+                    <Github className="h-4 w-4" /> GitHub
+                  </Button>
+                </Link>
+                <Link href="https://github.com/ArbenP/TypeClipboard/releases" target="_blank" className="w-full" prefetch={false}>
+                  <Button className="w-full">Download</Button>
+                </Link>
               </div>
             </div>
           </motion.div>
@@ -76,21 +94,33 @@ function SiteNav() {
 
 export default SiteNav;
 
-function NavLinks() {
+function NavLinks({
+  variant = "desktop",
+  onNavigate,
+}: {
+  variant?: "desktop" | "mobile";
+  onNavigate?: () => void;
+}) {
+  const linkClasses = cn(
+    "font-medium transition-colors hover:text-primary",
+    variant === "mobile"
+      ? "text-base text-foreground/90"
+      : "text-sm text-foreground/80"
+  );
+
   return (
     <>
-      <Link
-        href="#features"
-        className="text-sm font-medium hover:text-primary transition-colors"
-      >
-        Features
-      </Link>
-      <Link
-        href="#how-it-works"
-        className="text-sm font-medium hover:text-primary transition-colors"
-      >
-        How it Works
-      </Link>
+      {NAV_LINKS.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          onClick={onNavigate}
+          prefetch={false}
+          className={linkClasses}
+        >
+          {item.label}
+        </Link>
+      ))}
     </>
   );
 }
