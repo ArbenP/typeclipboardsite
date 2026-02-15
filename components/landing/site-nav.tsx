@@ -1,85 +1,107 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { Github, Keyboard, MenuIcon } from "lucide-react";
-import React, { useState } from "react";
-import { Button } from "../ui/button";
+import { Github, Keyboard, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import ExternalLinkButton from "./external-link-button";
 import { cn } from "@/lib/utils";
 
 function SiteNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  useEffect(() => {
+    if (!isMenuOpen) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isMenuOpen]);
+
+  const toggleMenu = () => setIsMenuOpen((open) => !open);
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4 md:px-6">
-          <Link href="/" className="flex items-center gap-2" prefetch={false}>
-            <motion.div
-              whileHover={{ rotate: 10 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Keyboard className="h-6 w-6" />
-            </motion.div>
+          <Link href="/" className="group flex items-center gap-2">
+            <Keyboard className="h-6 w-6 transition-transform duration-200 group-hover:rotate-6 motion-reduce:transition-none motion-reduce:transform-none" />
             <span className="text-lg font-bold">TypeClipboard</span>
           </Link>
-          <nav className="hidden gap-6 md:flex">
+          <nav className="hidden gap-6 lg:flex">
             <NavLinks />
           </nav>
           <div className="flex items-center gap-2">
-            <div className="hidden md:flex items-center gap-2">
-              <Link href="https://github.com/ArbenP/TypeClipboard" target="_blank">
-                <Button variant="ghost" size="icon">
-                  <Github className="h-5 w-5" />
-                  <span className="sr-only">GitHub</span>
-                </Button>
-              </Link>
-              <Link href="https://github.com/ArbenP/TypeClipboard/releases" target="_blank">
-                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                  Download
-                </Button>
-              </Link>
+            <div className="hidden lg:flex items-center gap-2">
+              <ExternalLinkButton
+                href="https://github.com/ArbenP/TypeClipboard"
+                label="nav_github"
+                size="icon"
+                variant="ghost"
+              >
+                <Github className="h-5 w-5" />
+                <span className="sr-only">GitHub</span>
+              </ExternalLinkButton>
+              <ExternalLinkButton
+                href="https://github.com/ArbenP/TypeClipboard/releases"
+                label="nav_download"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Download
+              </ExternalLinkButton>
             </div>
             <button
-              className="md:hidden rounded-md p-2 hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="rounded-md p-2 hover:bg-accent/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
               onClick={toggleMenu}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-navigation"
-              aria-label="Toggle navigation"
+              aria-label={isMenuOpen ? "Close navigation" : "Open navigation"}
             >
-              <MenuIcon className="h-6 w-6" />
+              {isMenuOpen ? (
+                <X className="h-6 w-6" aria-hidden="true" />
+              ) : (
+                <MenuIcon className="h-6 w-6" aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
       </header>
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            id="mobile-navigation"
-            className="md:hidden fixed inset-x-0 top-16 z-50 bg-background border-b p-4 shadow-lg"
-          >
-            <div className="flex flex-col gap-4 pb-2">
-              <NavLinks variant="mobile" onNavigate={closeMenu} />
-              <div className="flex flex-col gap-2 mt-4">
-                <Link href="https://github.com/ArbenP/TypeClipboard" target="_blank" className="w-full" prefetch={false}>
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <Github className="h-4 w-4" /> GitHub
-                  </Button>
-                </Link>
-                <Link href="https://github.com/ArbenP/TypeClipboard/releases" target="_blank" className="w-full" prefetch={false}>
-                  <Button className="w-full">Download</Button>
-                </Link>
-              </div>
+      {isMenuOpen && (
+        <div
+          id="mobile-navigation"
+          className="fixed inset-x-0 top-16 z-50 border-b bg-background p-4 shadow-lg lg:hidden motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-2 motion-safe:duration-200 motion-reduce:animate-none"
+        >
+          <div className="flex flex-col gap-4 pb-2">
+            <NavLinks variant="mobile" onNavigate={closeMenu} />
+            <div className="mt-4 flex flex-col gap-2">
+              <ExternalLinkButton
+                href="https://github.com/ArbenP/TypeClipboard"
+                label="mobile_nav_github"
+                className="w-full justify-start gap-2"
+                onClick={closeMenu}
+                variant="outline"
+              >
+                <Github className="h-4 w-4" /> GitHub
+              </ExternalLinkButton>
+              <ExternalLinkButton
+                href="https://github.com/ArbenP/TypeClipboard/releases"
+                label="mobile_nav_download"
+                className="w-full justify-start"
+                onClick={closeMenu}
+              >
+                Download
+              </ExternalLinkButton>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </>
   );
 }
@@ -95,7 +117,11 @@ function NavLinks({
 }) {
   const items = [
     { href: "#features", label: "Features" },
+    { href: "#use-cases", label: "Use Cases" },
+    { href: "#permissions", label: "Permissions" },
+    { href: "#requirements", label: "Requirements" },
     { href: "#how-it-works", label: "How it Works" },
+    { href: "#faq", label: "FAQ" },
   ];
 
   const baseLinkClasses =
@@ -107,7 +133,6 @@ function NavLinks({
         <Link
           key={item.href}
           href={item.href}
-          prefetch={false}
           onClick={() => onNavigate?.()}
           className={cn(
             baseLinkClasses,

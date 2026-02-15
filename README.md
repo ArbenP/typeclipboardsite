@@ -3,15 +3,14 @@
 Marketing website for [TypeClipboard](https://github.com/ArbenP/TypeClipboard), built with the Next.js App Router and Tailwind CSS.
 
 ## Tech Stack
-- Next.js 14 (App Router, `output: standalone`)
+- Next.js 16 (App Router, `output: standalone`)
 - React 18 with TypeScript
 - Tailwind CSS & tailwindcss-animate
-- Framer Motion for subtle motion and reveal effects
 - Lucide icons
 
 ## Prerequisites
-- Node.js ≥ 18.18
-- npm ≥ 9 (ships with Node 18+)
+- Node.js ≥ 20.9
+- npm ≥ 10
 
 ## Local Development
 ```bash
@@ -26,12 +25,11 @@ Useful scripts:
 | `npm run dev` | Start the local dev server on port 3000 |
 | `npm run build` | Create a production build (used by Coolify/Docker) |
 | `npm run start` | Start the production server from the compiled build |
-| `npm run lint` | Run Next.js lint checks |
+| `npm run lint` | Run ESLint checks |
 
 No environment variables are required for development. For production deploys set:
 
-- `NEXT_PUBLIC_SITE_URL` – canonical domain used in metadata, sitemap, and robots directives.
-- `NEXT_PUBLIC_APP_VERSION` (optional) – displayed in the hero banner for marketing parity with the desktop release.
+- `NEXT_PUBLIC_SITE_URL` – canonical domain used in metadata, OpenGraph/Twitter URLs, sitemap, and robots directives.
 
 ## Deployment
 
@@ -67,6 +65,13 @@ NEXT_PUBLIC_SITE_URL="https://your-domain.tld" npm run start
 - OpenGraph and Twitter images are generated dynamically via `app/opengraph-image.tsx` and `app/twitter-image.tsx`.
 - Icons are generated at build time by `app/icon.tsx` and `app/apple-icon.tsx`.
 - A PWA-style manifest is exposed via `app/manifest.ts`.
+
+## Analytics Hooks
+- Outbound CTA clicks emit a `cta_click` event when a supported analytics object is present on `window`:
+  - `window.gtag(...)`
+  - `window.plausible(...)`
+  - `window.umami(...)` / `window.umami.track(...)`
+- If no analytics client is loaded, tracking calls are safely ignored.
 
 ## License
 MIT © TypeClipboard
