@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "TypeClipboard",
+    name: "TypeClipboard (Type Clipboard)",
     short_name: "TypeClipboard",
     description:
       "Replay your clipboard as keystrokes to paste text anywhere you can focus a cursor.",

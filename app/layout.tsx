@@ -21,9 +21,9 @@ function toMetadataBase(url: string): URL {
   }
 }
 
-const pageTitle = "TypeClipboard | Paste as Keystrokes on macOS";
+const pageTitle = "TypeClipboard (Type Clipboard) | Paste as Keystrokes on macOS";
 const pageDescription =
-  "TypeClipboard is a macOS utility that replays your clipboard as live keyboard input for VNC, RDP, Citrix, virtual consoles, and secure fields.";
+  "TypeClipboard (Type Clipboard) is a free macOS utility that replays your clipboard as live keyboard input for VNC, RDP, Citrix, virtual consoles, and secure fields where paste is blocked.";
 
 export const metadata: Metadata = {
   metadataBase: toMetadataBase(siteUrl),
@@ -34,12 +34,20 @@ export const metadata: Metadata = {
   },
   keywords: [
     "TypeClipboard",
+    "Type Clipboard",
+    "type clipboard mac",
     "macOS clipboard",
     "paste as keystrokes",
+    "clipboard to keystrokes",
     "VNC paste workaround",
     "RDP paste workaround",
     "Citrix clipboard",
+    "macOS typing tool",
+    "paste blocked workaround",
   ],
+  other: {
+    "theme-color": "#ffffff",
+  },
   openGraph: {
     title: pageTitle,
     description: pageDescription,

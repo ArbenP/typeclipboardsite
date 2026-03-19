@@ -16,10 +16,47 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://typeclipboard.com";
 const releaseUrl = "https://github.com/ArbenP/TypeClipboard/releases";
 const repositoryUrl = "https://github.com/ArbenP/TypeClipboard";
 
+const faqs = [
+  {
+    question: "Does TypeClipboard work in every secure field?",
+    answer:
+      "Most fields that accept normal typing will work. Some hardened prompts block all synthetic input, including accessibility APIs.",
+  },
+  {
+    question: "How do I avoid typing into the wrong window?",
+    answer:
+      "Use the countdown before typing. It gives you time to focus the correct target window before keystrokes start.",
+  },
+  {
+    question: "Can I tune typing speed for slow remote sessions?",
+    answer:
+      "Yes. Increase per-character delay for high-latency connections and lower it when target applications can keep up.",
+  },
+  {
+    question: "Can I stop typing once it starts?",
+    answer:
+      "Yes. Press Escape or click Cancel Typing during countdown or active typing.",
+  },
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.answer,
+    },
+  })),
+};
+
 const softwareApplicationJsonLd = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
   name: "TypeClipboard",
+  alternateName: "Type Clipboard",
   applicationCategory: "UtilityApplication",
   operatingSystem: "macOS",
   description:
@@ -58,29 +95,6 @@ const useCases = [
   },
 ];
 
-const faqs = [
-  {
-    question: "Does TypeClipboard work in every secure field?",
-    answer:
-      "Most fields that accept normal typing will work. Some hardened prompts block all synthetic input, including accessibility APIs.",
-  },
-  {
-    question: "How do I avoid typing into the wrong window?",
-    answer:
-      "Use the countdown before typing. It gives you time to focus the correct target window before keystrokes start.",
-  },
-  {
-    question: "Can I tune typing speed for slow remote sessions?",
-    answer:
-      "Yes. Increase per-character delay for high-latency connections and lower it when target applications can keep up.",
-  },
-  {
-    question: "Can I stop typing once it starts?",
-    answer:
-      "Yes. Press Escape or click Cancel Typing during countdown or active typing.",
-  },
-];
-
 export default function Home() {
   const currentYear = new Date().getFullYear();
 
@@ -88,7 +102,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <SiteNav />
       <main id="main-content" className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-40">
+        <section id="hero" className="w-full py-12 md:py-24 lg:py-32 xl:py-40">
           <div className="container px-4 md:px-6">
             <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col justify-center space-y-6">
@@ -100,9 +114,9 @@ export default function Home() {
                     Paste where you can&apos;t paste.
                   </h1>
                   <p className="max-w-[640px] text-gray-500 md:text-xl dark:text-gray-400">
-                    TypeClipboard replays your clipboard as live keyboard input so
-                    text works in VNC, RDP, Citrix, virtual consoles, and secure
-                    fields.
+                    TypeClipboard (Type Clipboard) replays your clipboard as live
+                    keyboard input so text works in VNC, RDP, Citrix, virtual
+                    consoles, and secure fields.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -124,20 +138,20 @@ export default function Home() {
                   </ExternalLinkButton>
                 </div>
                 <ul className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-                  <li className="inline-flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                     Open source on GitHub
                   </li>
-                  <li className="inline-flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                     MIT licensed
                   </li>
-                  <li className="inline-flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                     No account required
                   </li>
-                  <li className="inline-flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                     No app telemetry
                   </li>
                 </ul>
@@ -146,7 +160,7 @@ export default function Home() {
                 <div className="relative aspect-video w-full">
                   <Image
                     src="/screenshot.png"
-                    alt="TypeClipboard screenshot showing clipboard text controls and typing settings"
+                    alt="TypeClipboard (Type Clipboard) app screenshot showing clipboard text controls and typing settings for pasting as keystrokes"
                     fill
                     className="object-contain drop-shadow-2xl"
                     priority
@@ -165,9 +179,9 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <div className="inline-block rounded-lg bg-gray-200 px-3 py-1 text-sm dark:bg-gray-700">
+                <span className="inline-block rounded-lg bg-gray-200 px-3 py-1 text-sm dark:bg-gray-700">
                   Key Features
-                </div>
+                </span>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
                   Designed for Remote Workflows
                 </h2>
@@ -295,16 +309,16 @@ export default function Home() {
               <div className="rounded-lg border bg-background p-6">
                 <h3 className="text-xl font-semibold">What to Expect</h3>
                 <ul className="mt-4 space-y-3 text-sm text-muted-foreground md:text-base">
-                  <li className="inline-flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                     Manual capture and auto-capture options
                   </li>
-                  <li className="inline-flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                     Countdown and per-character delay controls
                   </li>
-                  <li className="inline-flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  <li className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                     Escape-to-cancel and optional trailing Return key
                   </li>
                 </ul>
@@ -384,12 +398,16 @@ export default function Home() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationJsonLd) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
       </main>
       <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t px-4 py-6 md:px-6 sm:flex-row">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           © {currentYear} TypeClipboard. Licensed under MIT License.
         </p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
+        <nav aria-label="Footer" className="sm:ml-auto flex gap-4 sm:gap-6">
           <a
             className="text-xs underline-offset-4 hover:underline"
             href={repositoryUrl}
@@ -405,6 +423,14 @@ export default function Home() {
             target="_blank"
           >
             MIT License
+          </a>
+          <a
+            className="text-xs underline-offset-4 hover:underline"
+            href="https://nexuscloud.ie"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Built by NexusCloud.ie
           </a>
         </nav>
       </footer>
@@ -443,7 +469,7 @@ function StepCard({
 }) {
   return (
     <div className="flex flex-col items-center space-y-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-white">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
         {number}
       </div>
       <h3 className="text-xl font-bold">{title}</h3>

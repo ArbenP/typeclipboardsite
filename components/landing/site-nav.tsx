@@ -35,7 +35,7 @@ function SiteNav() {
             <Keyboard className="h-6 w-6 transition-transform duration-200 group-hover:rotate-6 motion-reduce:transition-none motion-reduce:transform-none" />
             <span className="text-lg font-bold">TypeClipboard</span>
           </Link>
-          <nav className="hidden gap-6 lg:flex">
+          <nav aria-label="Main" className="hidden gap-6 lg:flex">
             <NavLinks />
           </nav>
           <div className="flex items-center gap-2">
