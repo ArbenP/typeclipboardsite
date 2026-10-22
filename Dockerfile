@@ -1,22 +1,22 @@
 # Build Stage: install dependencies
-FROM node:20-alpine AS deps
+FROM node:24.22.1-alpine3.23 AS deps
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN corepack enable && pnpm install --frozen-lockfile --prod=false
 
 # Build Stage: compile the Next.js app
-FROM node:20-alpine AS builder
+FROM node:24.22.1-alpine3.23 AS builder
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN corepack enable && pnpm build
 
 # Runtime Stage: minimal production image
-FROM node:20-alpine AS runner
+FROM node:24.22.1-alpine3.23 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1

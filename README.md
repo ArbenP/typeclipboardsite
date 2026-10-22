@@ -14,18 +14,18 @@ Marketing website for [TypeClipboard](https://github.com/ArbenP/TypeClipboard), 
 
 ## Local Development
 ```bash
-npm install
-npm run dev
+pnpm install --frozen-lockfile
+pnpm dev
 ```
 
 Useful scripts:
 
 | Script | Description |
 | ------ | ----------- |
-| `npm run dev` | Start the local dev server on port 3000 |
-| `npm run build` | Create a production build (used by Coolify/Docker) |
-| `npm run start` | Start the production server from the compiled build |
-| `npm run lint` | Run ESLint checks |
+| `pnpm dev` | Start the local dev server on port 3000 |
+| `pnpm build` | Create a production build (used by Coolify/Docker) |
+| `pnpm start` | Start the production server from the compiled build |
+| `pnpm lint` | Run ESLint checks |
 
 No environment variables are required for development. For production deploys set:
 
@@ -50,15 +50,15 @@ docker run -p 3000:3000 --env NEXT_PUBLIC_SITE_URL="https://localhost" typeclipb
 ### Static Node Host
 If you prefer a traditional Node deployment (without Docker), run:
 ```bash
-npm install
-npm run build
-NEXT_PUBLIC_SITE_URL="https://your-domain.tld" npm run start
+pnpm install --frozen-lockfile
+pnpm build
+NEXT_PUBLIC_SITE_URL="https://your-domain.tld" pnpm start
 ```
 
 ## Release Checklist
 - Update marketing content as needed in `app/page.tsx`.
 - Bump `package.json` version.
-- Run `npm run lint` and `npm run build`.
+- Run `pnpm lint` and `pnpm build`.
 - Commit and tag the release (matching the desktop app version if desired).
 
 ## Assets
@@ -75,3 +75,11 @@ NEXT_PUBLIC_SITE_URL="https://your-domain.tld" npm run start
 
 ## License
 MIT © TypeClipboard
+
+## Security maintenance
+
+Use Node 24.22.1 (see `.nvmrc`) and the pnpm version pinned in `package.json`. Install with `pnpm install --frozen-lockfile`. The release-age policy in `pnpm-workspace.yaml` requires packages to be at least 24 hours (1440 minutes) old.
+
+The development dependency `braces` 3.0.3 still has [an unpatched upstream DoS advisory](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm). Do not feed untrusted glob patterns into the affected build/lint tools; no advisory has been suppressed. Production dependency audits are clean as of 22 October 2026.
+
+In Coolify, select the **Dockerfile** build pack to use the pinned runtime image; the existing deployment uses Nixpacks. Keep the application port at 3000. Rebuild and deploy after reviewing the patch; repository changes alone do not update running containers.
